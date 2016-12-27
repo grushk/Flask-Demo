@@ -3,13 +3,25 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Hello, World!</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	    <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.0.min.css" type="text/css" />
+	    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.0.min.js"></script>
+	    {{ script | safe }}
 	</head>
 	<body>
-		<div>
-  			<h1>Hello, World!</h1>
+		<div class=page>
+  			<h1>Stock Chart</h1>
+  			<h2>Enter Stock Lookup Information</h2>
+  			<form id="stockform" method="post" action="plotchart">
+  				Ticker: <input type="text" name="ticker"><br>
+  				<input type="checkbox" name="closing" value="Close" checked="yes">Closing Price<br>
+  				<input type="checkbox" name="opening" value="Open">Opening Price<br>
+  				<input type="checkbox" name="high" value="High">Highest Daily Price<br>
+  				<input type="checkbox" name="low" value="Low">Lowest Daily Price<br>
+  				<input type="submit" value="Plot">
+  			</form>
+  			<div>
+  				{{ div | safe }}
+  			</div>
 		</div>
 	</body>
 </html>
