@@ -17,7 +17,7 @@ def index():
 	return render_template('index.html')
 
 
-@app.route('/index')
+@app.route('/plotchart')
 def plotchart():
 	stock = request.form['ticker'].upper()
 	closing = request.form['closing']
@@ -40,6 +40,7 @@ def plotchart():
 				x_axis_type='datetime')
 	script, div = components(plot)
 	return render_template('index.html', script=script, div=div)
+
 
 if __name__ == '__main__':
 	app.run(port=33507)
