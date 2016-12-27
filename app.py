@@ -4,7 +4,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components, autoload_static
 from bokeh.resources import INLINE, CDN
 from bokeh.templates import RESOURCES
-# {{ script | safe }}
+
 
 app = Flask(__name__)
 
@@ -47,11 +47,8 @@ def plotchart():
 				title='Data from Quandle WIKI set',
 				x_axis_label='date',
 				x_axis_type='datetime')
-	# script, div = components(plot)
-	# return render_template('embed.html', script=script, div=div, plot_resources=plot_resources)
-	js, div = autoload_static(plot, CDN, '/static/bokeh/plot.js')
-	with open('static/bokeh/plot.js', 'w') as f:
-		f.write(js)
+	script, div = components(plot)
+	return render_template('embed.html', script=script, div=div, plot_resources=plot_resources)
 
 
 if __name__ == '__main__':
