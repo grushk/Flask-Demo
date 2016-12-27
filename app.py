@@ -48,7 +48,7 @@ def plotchart():
 				x_axis_label='date',
 				x_axis_type='datetime')
 	script, div = components(plot)
-	return render_template('index.html', script=script, div=div, plot_resources=plot_resources)
+	return render_template('embed.html', script=script, div=div, plot_resources=plot_resources)
 
 
 if __name__ == '__main__':
