@@ -3,7 +3,7 @@ from __future__ import print_function
 
 import flask
 
-from bokeh.index import components
+from bokeh.embed import components
 from bokeh.plotting import figure
 from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
