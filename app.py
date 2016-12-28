@@ -22,7 +22,7 @@ def getitem(obj, item, default):
 
 @app.route("/")
 def plotstock():
-    # Grab the inputs arguments from the URL
+	# Grab the inputs arguments from the URL
     args = flask.request.args
 
     # Get all the form arguments in the url with defaults
@@ -93,6 +93,16 @@ def plotstock():
     return encode_utf8(html)
 
 
+@app.route('/')
+def main():
+	return flask.redirect('/index')
+
+
+@app.route('/index')
+def index():
+	return flask.render_template('index.html')
+
+
 if __name__ == "__main__":
-    print(__doc__)
-    app.run()
+   	print(__doc__)
+   	app.run()
