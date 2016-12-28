@@ -90,7 +90,7 @@ def plotstock():
 			js_resources=js_resources,
 			css_resources=css_resources
 		)
-		return encode_utf8(html)
+	return encode_utf8(html)
 
 
 @app.route('/')
