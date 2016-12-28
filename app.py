@@ -27,16 +27,16 @@ def plotstock():
 
 	# Get all the form arguments in the url with defaults
 	stock = getitem(args, 'ticker', '')
-	closing = int(getitem(args, 'close', 0))
-	opening = int(getitem(args, 'open', 0))
-	high = int(getitem(args, 'high', 0))
-	low = int(getitem(args, 'low', 0))
+	closing = getitem(args, 'close', "0")
+	opening = getitem(args, 'open', "0")
+	high = getitem(args, 'high', "0")
+	low = getitem(args, 'low', "0")
 
 	js_resources = INLINE.render_js()
 	css_resources = INLINE.render_css()
 
 	# Get stock info
-	api_url = 'https://www.quandl.com/api/v1/datasets/WIKI/%s.json' % stock
+	api_url = 'https://www.quandl.com/api/v1/datasets/WIKI/%s.json?api_key=8sBx2taEhYKZsHTKZEX2' % stock
 	session = requests.Session()
 	session.mount('http://', requests.adapters.HTTPAdapter(max_retries=3))
 	raw_data = session.get(api_url)
@@ -65,6 +65,15 @@ def plotstock():
 			js_resources=js_resources,
 			css_resources=css_resources
 		)
+	elif closing == "0" and opening == "0" and high == "0" and low == "0":
+		html = flask.render_template(
+			'index.html',
+			plot_script="",
+			plot_div="Please select at least one feature to plot.",
+			js_resources=js_resources,
+			css_resources=css_resources,
+			ticker=stock
+		)
 	else:
 		df = pandas.DataFrame(raw_json['data'], columns=raw_json['column_names'])
 		df = df.set_index(['Date'])
@@ -73,13 +82,13 @@ def plotstock():
 
 		# Create Stock Chart
 		p = figure(title=name, x_axis_type="datetime")
-		if closing == 1:
+		if closing == "1":
 			p.line(df.index, df['Close'], color='blue', legend='Closing Price')
-		if opening == 1:
+		if opening == "1":
 			p.line(df.index, df['Open'], color='green', legend='Opening Price')
-		if high == 1:
+		if high == "1":
 			p.line(df.index, df['High'], color='red', legend='Highest Price')
-		if low == 1:
+		if low == "1":
 			p.line(df.index, df['Low'], color='orange', legend='Lowest Price')
 
 		script, div = components(p)
@@ -88,7 +97,8 @@ def plotstock():
 			plot_script=script,
 			plot_div=div,
 			js_resources=js_resources,
-			css_resources=css_resources
+			css_resources=css_resources,
+			ticker=stock
 		)
 	return encode_utf8(html)
 

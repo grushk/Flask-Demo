@@ -5,6 +5,7 @@
     <meta http-equiv='content-type' content='text/html; charset=utf-8' />
 
     <title>Embed Demo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     {{ js_resources|indent(4)|safe }}
 
@@ -17,13 +18,18 @@
     <h2>Stock Chart Lookup</h2>
     <p> Select your settings: </p>
     <form name="color_button" method='GET'>
-        Ticker:
-        <input type="text" name="ticker"><br>
-        <input type="checkbox" name="close" value="1" checked="1">Closing Price<br>
-        <input type="checkbox" name="open" value="1">Opening Price<br>
-        <input type="checkbox" name="high" value="1">Highest Daily Price<br>
-        <input type="checkbox" name="low" value="1">Lowest Daily Price<br>
-        <button type="submit">Submit</button>
+        <div class="form-group">
+        	<label for="stockticker">Enter Stock Ticker</label>
+        	<input type="text" name="ticker" id="stockticker" placeholder="i.e. &quot;GOOG&quot;" value="{{ ticker }}"><br>
+        </div>
+        <div class="checkbox">
+        	<label>Choose Features</label><br>
+	        <label><input type="checkbox" name="close" value="1">Closing Price</label><br>
+	        <label><input type="checkbox" name="open" value="1">Opening Price</label><br>
+	        <label><input type="checkbox" name="high" value="1">Highest Daily Price</label><br>
+	        <label><input type="checkbox" name="low" value="1">Lowest Daily Price</label><br>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
     {{ plot_div|indent(4)|safe }}
 </body>
