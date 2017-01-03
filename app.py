@@ -9,6 +9,7 @@ from bokeh.resources import INLINE
 from bokeh.util.string import encode_utf8
 import requests
 import pandas
+import datetime
 
 app = flask.Flask(__name__)
 
@@ -36,7 +37,10 @@ def plotstock():
 	css_resources = INLINE.render_css()
 
 	# Get stock info
-	api_url = 'https://www.quandl.com/api/v1/datasets/WIKI/%s.json?api_key=8sBx2taEhYKZsHTKZEX2' % stock
+	enddate = datetime.datetime.now().date()
+	startdate = enddate - datetime.timedelta(days=30)
+	api_url = 'https://www.quandl.com/api/v3/datasets/WIKI/%s.json?api_key=8sBx2taEhYKZsHTKZEX2&start_date=%s&end_date=%s' % (stock, startdate.strftime("%Y-%m-%d"), enddate.strftime("%Y-%m-%d"))
+	print(api_url)
 	session = requests.Session()
 	session.mount('http://', requests.adapters.HTTPAdapter(max_retries=3))
 	raw_data = session.get(api_url)
@@ -49,7 +53,7 @@ def plotstock():
 			js_resources=js_resources,
 			css_resources=css_resources
 		)
-	elif 'error' in raw_json and raw_json['error'] == 'Unknown api route.':
+	elif 'quandl_error' in raw_json and raw_json['quandl_error']['code'] == 'QECx01':
 		html = flask.render_template(
 			'index.html',
 			plot_script="",
@@ -57,7 +61,7 @@ def plotstock():
 			js_resources=js_resources,
 			css_resources=css_resources
 		)
-	elif 'error' in raw_json and raw_json['error'] == 'Requested entity does not exist.':
+	elif 'quandl_error' in raw_json and raw_json['quandl_error']['code'] == 'QECx02':
 		html = flask.render_template(
 			'index.html',
 			plot_script="",
@@ -75,10 +79,10 @@ def plotstock():
 			ticker=stock
 		)
 	else:
-		df = pandas.DataFrame(raw_json['data'], columns=raw_json['column_names'])
+		df = pandas.DataFrame(raw_json['dataset']['data'], columns=raw_json['dataset']['column_names'])
 		df = df.set_index(['Date'])
 		df.index = pandas.to_datetime(df.index)
-		name = raw_json['name']
+		name = raw_json['dataset']['name']
 
 		# Create Stock Chart
 		p = figure(title=name, x_axis_type="datetime")
@@ -115,4 +119,4 @@ def index():
 
 if __name__ == "__main__":
 	print(__doc__)
-	app.run()
+	app.run(debug=False)
